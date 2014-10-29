@@ -8,8 +8,10 @@ void setup() {
 	ArrayList<Element>els = p.readIn();
 
 	// Create Grid
-	g = new ElementGrid(els, new Rect(new Point(0, 0), 
-		new Size(width, height)));
+	float offset = 100;
+	g = new ElementGrid(els, new Rect(new Point(offset, offset * 2), 
+		new Size(width - offset, height - offset * 2)));
+	// println("Width = " + (width - offset) + ", Height = " + (height - offset));
 
 }
 

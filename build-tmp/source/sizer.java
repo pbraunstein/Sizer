@@ -24,8 +24,10 @@ public void setup() {
 	ArrayList<Element>els = p.readIn();
 
 	// Create Grid
-	g = new ElementGrid(els, new Rect(new Point(0, 0), 
-		new Size(width, height)));
+	float offset = 100;
+	g = new ElementGrid(els, new Rect(new Point(offset, offset * 2), 
+		new Size(width - offset, height - offset * 2)));
+	// println("Width = " + (width - offset) + ", Height = " + (height - offset));
 
 }
 
@@ -71,24 +73,39 @@ class ElementGrid{
 	}
 
 	public void render() {
-		ElementView e = elementViews.get(0);
-		e.setRadius(100);
-		float radius = e.getRadius();
+		float xPctUsed = 0.0f;
+		float yPctUsed = 0.0f;
 
-		float xPct = getXPct(radius) + PADDING_PCT;
-		float yPct = getYPct(radius) + PADDING_PCT;
-		float xCent = getXCoord(xPct);
-		float yCent = getYCoord(yPct);
+		// println("Bounds_X = " + bounds.s.w + ", Bounds_Y = " + bounds.s.h);
 
-		println("radius = " + radius);
-		println("radius_Xpct = " + xPct);
-		println("radius_Ypct = " + yPct);
-		println("center_X = " + xCent);
-		println("center_Y = " + yCent);
+		for (ElementView e : elementViews) {
+			e.setRadius(20);
+			float radius = e.getRadius();
 
-		e.setCenter(new Point(xCent, yCent));
-		e.render();	
-		//System.exit(1);
+			float xPct = getXPct(radius) + PADDING_PCT;
+			float yPct = getYPct(radius) + PADDING_PCT;
+			float xCent = getXCoord(xPct + xPctUsed);
+			float yCent = getYCoord(yPct + yPctUsed);
+
+			// If the next element would fall off the screen -- recalculate
+			if (xPct + xPctUsed + getXPct(radius) >= 1) { 
+				xPctUsed = 0.0f;
+				yPctUsed += yPct * 2;
+				xCent = getXCoord(xPct + xPctUsed);
+				yCent = getYCoord(yPct + yPctUsed);
+			} else {
+				xPctUsed += xPct * 2; // Only update xPctUsed
+			}
+
+
+
+
+			e.setCenter(new Point(xCent, yCent));
+			e.render();	
+
+		}
+
+
 	}
 
 
@@ -105,11 +122,11 @@ class ElementGrid{
 	// Convert from real coordinate system to the 0 - 1
 	// coordinates specified here
 	public float getXPct(float xVal) {
-		return (xVal - bounds.o.x) / bounds.s.w;
+		return (xVal) / bounds.s.w;
 	}
 
 	public float getYPct(float yVal) {
-		return (yVal - bounds.o.y) / bounds.s.h;
+		return (yVal) / bounds.s.h;
 	}
  
 }
@@ -152,8 +169,8 @@ class ElementView {
 
 		// Draw function takes in diameter, must scale radius
 		ellipse(center.x, center.y, 2 * radius, 2 * radius);
-		println("Just rendered: x = " + center.x + ", y = " + 
-			center.y + ", radius = " + radius);
+		// println("Just rendered: x = " + center.x + ", y = " + 
+			// center.y + ", radius = " + radius);
 	}
 
 }

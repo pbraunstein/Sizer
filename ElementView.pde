@@ -37,8 +37,8 @@ class ElementView {
 
 		// Draw function takes in diameter, must scale radius
 		ellipse(center.x, center.y, 2 * radius, 2 * radius);
-		println("Just rendered: x = " + center.x + ", y = " + 
-			center.y + ", radius = " + radius);
+		// println("Just rendered: x = " + center.x + ", y = " + 
+			// center.y + ", radius = " + radius);
 	}
 
 }
