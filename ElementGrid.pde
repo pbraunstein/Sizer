@@ -1,8 +1,9 @@
 class ElementGrid{
 	public ArrayList<ElementView> elementViews;
 	public Rect bounds;
+	public boolean realValues = false;
 
-	public final float PADDING_PCT = 0;
+	public final float PADDING_PCT = 0.02;
 
 	public ElementGrid(ArrayList<Element> elements, Rect bounds) {
 		this.elementViews = new ArrayList<ElementView>();
@@ -26,7 +27,7 @@ class ElementGrid{
 		// println("Bounds_X = " + bounds.s.w + ", Bounds_Y = " + bounds.s.h);
 
 		for (ElementView e : elementViews) {
-			e.setRadius(20);
+			e.setRadius(35);
 			float radius = e.getRadius();
 
 			float xPct = getXPct(radius) + PADDING_PCT;
@@ -35,13 +36,19 @@ class ElementGrid{
 			float yCent = getYCoord(yPct + yPctUsed);
 
 			// If the next element would fall off the screen -- recalculate
-			if (xPct + xPctUsed + getXPct(radius) >= 1) { 
+			if (xPct + xPctUsed + getXPct(radius) + PADDING_PCT >= 1) { 
 				xPctUsed = 0.0;
 				yPctUsed += yPct * 2;
 				xCent = getXCoord(xPct + xPctUsed);
 				yCent = getYCoord(yPct + yPctUsed);
 			} else {
 				xPctUsed += xPct * 2; // Only update xPctUsed
+			}
+
+			// Bounds control for height just GTFO
+			if (yPct + yPctUsed + getYPct(radius) + PADDING_PCT >= 1) {
+				println("ERROR: Not enough room to display all elements in view");
+				System.exit(1);
 			}
 
 
