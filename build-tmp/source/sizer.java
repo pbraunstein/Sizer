@@ -24,7 +24,7 @@ public void setup() {
 	ArrayList<Element>els = p.readIn();
 
 	// Create Grid
-	g = new ElementGrid(els, new Rect(new Point(width / 2, height / 2), 
+	g = new ElementGrid(els, new Rect(new Point(0, 0), 
 		new Size(width, height)));
 
 }
@@ -53,6 +53,8 @@ class ElementGrid{
 	public ArrayList<ElementView> elementViews;
 	public Rect bounds;
 
+	public final float PADDING_PCT = 0;
+
 	public ElementGrid(ArrayList<Element> elements, Rect bounds) {
 		this.elementViews = new ArrayList<ElementView>();
 		makeElementViews(elements);
@@ -70,8 +72,23 @@ class ElementGrid{
 
 	public void render() {
 		ElementView e = elementViews.get(0);
-		e.setCenter(new Point(getXCoord(0), getYCoord(0)));
+		e.setRadius(100);
+		float radius = e.getRadius();
+
+		float xPct = getXPct(radius) + PADDING_PCT;
+		float yPct = getYPct(radius) + PADDING_PCT;
+		float xCent = getXCoord(xPct);
+		float yCent = getYCoord(yPct);
+
+		println("radius = " + radius);
+		println("radius_Xpct = " + xPct);
+		println("radius_Ypct = " + yPct);
+		println("center_X = " + xCent);
+		println("center_Y = " + yCent);
+
+		e.setCenter(new Point(xCent, yCent));
 		e.render();	
+		//System.exit(1);
 	}
 
 
@@ -85,11 +102,21 @@ class ElementGrid{
 		return (pctY * bounds.s.h) + bounds.o.y;
 	}
 
+	// Convert from real coordinate system to the 0 - 1
+	// coordinates specified here
+	public float getXPct(float xVal) {
+		return (xVal - bounds.o.x) / bounds.s.w;
+	}
+
+	public float getYPct(float yVal) {
+		return (yVal - bounds.o.y) / bounds.s.h;
+	}
+ 
 }
 class ElementView {
 	public final Element element;
 	private Point center;
-	public float radius;
+	private float radius;
 
 	public final float RADIUS_SCALE = 1;
 	public final int FILL_COLOR = color(50, 50, 50);
@@ -110,11 +137,23 @@ class ElementView {
 		this.center = p;
 	}
 
+	public float getRadius() {
+		return radius;
+	}
+
+	public void setRadius(float r) {
+		this.radius = r;
+	}
+
 	public void render() {
 		ellipseMode(CENTER);  // First 2 params center, second two width & height
 		stroke(STROKE_COLOR);
 		fill(FILL_COLOR);
-		ellipse(center.x, center.y, radius, radius);
+
+		// Draw function takes in diameter, must scale radius
+		ellipse(center.x, center.y, 2 * radius, 2 * radius);
+		println("Just rendered: x = " + center.x + ", y = " + 
+			center.y + ", radius = " + radius);
 	}
 
 }

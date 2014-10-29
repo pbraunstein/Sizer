@@ -8,7 +8,7 @@ void setup() {
 	ArrayList<Element>els = p.readIn();
 
 	// Create Grid
-	g = new ElementGrid(els, new Rect(new Point(width / 2, height / 2), 
+	g = new ElementGrid(els, new Rect(new Point(0, 0), 
 		new Size(width, height)));
 
 }

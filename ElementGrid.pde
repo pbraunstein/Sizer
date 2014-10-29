@@ -2,6 +2,8 @@ class ElementGrid{
 	public ArrayList<ElementView> elementViews;
 	public Rect bounds;
 
+	public final float PADDING_PCT = 0;
+
 	public ElementGrid(ArrayList<Element> elements, Rect bounds) {
 		this.elementViews = new ArrayList<ElementView>();
 		makeElementViews(elements);
@@ -19,8 +21,23 @@ class ElementGrid{
 
 	public void render() {
 		ElementView e = elementViews.get(0);
-		e.setCenter(new Point(getXCoord(0), getYCoord(0)));
+		e.setRadius(100);
+		float radius = e.getRadius();
+
+		float xPct = getXPct(radius) + PADDING_PCT;
+		float yPct = getYPct(radius) + PADDING_PCT;
+		float xCent = getXCoord(xPct);
+		float yCent = getYCoord(yPct);
+
+		println("radius = " + radius);
+		println("radius_Xpct = " + xPct);
+		println("radius_Ypct = " + yPct);
+		println("center_X = " + xCent);
+		println("center_Y = " + yCent);
+
+		e.setCenter(new Point(xCent, yCent));
 		e.render();	
+		//System.exit(1);
 	}
 
 
@@ -34,4 +51,14 @@ class ElementGrid{
 		return (pctY * bounds.s.h) + bounds.o.y;
 	}
 
+	// Convert from real coordinate system to the 0 - 1
+	// coordinates specified here
+	public float getXPct(float xVal) {
+		return (xVal - bounds.o.x) / bounds.s.w;
+	}
+
+	public float getYPct(float yVal) {
+		return (yVal - bounds.o.y) / bounds.s.h;
+	}
+ 
 }
