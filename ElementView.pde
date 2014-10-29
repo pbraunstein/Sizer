@@ -22,7 +22,7 @@ class ElementView {
 		this.center = p;
 	}
 
-	public void draw() {
+	public void render() {
 		ellipseMode(CENTER);  // First 2 params center, second two width & height
 		stroke(STROKE_COLOR);
 		fill(FILL_COLOR);

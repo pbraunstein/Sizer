@@ -14,17 +14,18 @@ import java.io.IOException;
 
 public class sizer extends PApplet {
 
-Element e;
-ElementView v;
 ElementGrid g;
 
 public void setup() {
 	size(600, 800);
-	g = new Parser("AvgTemps.csv").readIn();
-	printTest(g.elements);
-	e = new Element("Colorado", 45.1f);
-	v = new ElementView(e);
-	v.setCenter(new Point(width / 2, height / 2));
+
+	// Create parser
+	Parser p = new Parser("AvgTemps.csv");
+	ArrayList<Element>els = p.readIn();
+
+	// Create Grid
+	g = new ElementGrid(els, new Rect(new Point(width / 2, height / 2), 
+		new Size(width, height)));
 
 }
 
@@ -36,7 +37,7 @@ public void printTest(ArrayList<Element> l) {
 
 public void draw() {
 	background(255, 255, 255);
-	v.draw();
+	g.render();
 
 }
 class Element {
@@ -49,10 +50,41 @@ class Element {
 	}
 }
 class ElementGrid{
-	public ArrayList<Element> elements;
-	public ElementGrid(ArrayList<Element> elements) {
-		this.elements = elements;
+	public ArrayList<ElementView> elementViews;
+	public Rect bounds;
+
+	public ElementGrid(ArrayList<Element> elements, Rect bounds) {
+		this.elementViews = new ArrayList<ElementView>();
+		makeElementViews(elements);
+		this.bounds = bounds;
 	}
+
+
+	// Wraps each element in an ElementView and adds it to
+	// the class variable
+	private void makeElementViews(ArrayList<Element> elements) {
+		for (Element e : elements) {
+			elementViews.add(new ElementView(e));
+		}
+	}
+
+	public void render() {
+		ElementView e = elementViews.get(0);
+		e.setCenter(new Point(getXCoord(0), getYCoord(0)));
+		e.render();	
+	}
+
+
+	// Coordinate system is from 0 to 1, these functions
+	// convert back to the real coordinate system
+	public float getXCoord(float pctX) {
+		return (pctX * bounds.s.w) + bounds.o.x; 
+	}
+
+	public float getYCoord(float pctY) {
+		return (pctY * bounds.s.h) + bounds.o.y;
+	}
+
 }
 class ElementView {
 	public final Element element;
@@ -78,7 +110,7 @@ class ElementView {
 		this.center = p;
 	}
 
-	public void draw() {
+	public void render() {
 		ellipseMode(CENTER);  // First 2 params center, second two width & height
 		stroke(STROKE_COLOR);
 		fill(FILL_COLOR);
@@ -109,8 +141,13 @@ class Size {
 
 
 class Rect {
-	public Point origin;
-	public Size size;
+	public Point o;
+	public Size s;
+
+	public Rect(Point o, Size s) {
+		this.o = o;
+		this.s = s;
+	}
 }
 class Parser {
 	public final String file;
@@ -122,7 +159,7 @@ class Parser {
 		this.file = file;
 	}
 
-	public ElementGrid readIn() {
+	public ArrayList<Element> readIn() {
 		String[] lines = loadStrings(file);
 		ArrayList<Element> dieListe = new ArrayList<Element>();
 
@@ -137,7 +174,7 @@ class Parser {
 
 		}
 
-		return new ElementGrid(dieListe);
+		return dieListe;
 	}
 }
   static public void main(String[] passedArgs) {

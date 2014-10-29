@@ -1,14 +1,15 @@
-Element e;
-ElementView v;
 ElementGrid g;
 
 void setup() {
 	size(600, 800);
-	g = new Parser("AvgTemps.csv").readIn();
-	printTest(g.elements);
-	e = new Element("Colorado", 45.1);
-	v = new ElementView(e);
-	v.setCenter(new Point(width / 2, height / 2));
+
+	// Create parser
+	Parser p = new Parser("AvgTemps.csv");
+	ArrayList<Element>els = p.readIn();
+
+	// Create Grid
+	g = new ElementGrid(els, new Rect(new Point(width / 2, height / 2), 
+		new Size(width, height)));
 
 }
 
@@ -20,6 +21,6 @@ void printTest(ArrayList<Element> l) {
 
 void draw() {
 	background(255, 255, 255);
-	v.draw();
+	g.render();
 
 }

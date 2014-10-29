@@ -8,7 +8,7 @@ class Parser {
 		this.file = file;
 	}
 
-	public ElementGrid readIn() {
+	public ArrayList<Element> readIn() {
 		String[] lines = loadStrings(file);
 		ArrayList<Element> dieListe = new ArrayList<Element>();
 
@@ -23,6 +23,6 @@ class Parser {
 
 		}
 
-		return new ElementGrid(dieListe);
+		return dieListe;
 	}
 }

@@ -21,6 +21,11 @@ class Size {
 
 
 class Rect {
-	public Point origin;
-	public Size size;
+	public Point o;
+	public Size s;
+
+	public Rect(Point o, Size s) {
+		this.o = o;
+		this.s = s;
+	}
 }
