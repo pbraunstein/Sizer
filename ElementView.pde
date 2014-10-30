@@ -2,16 +2,19 @@ class ElementView {
 	public final Element element;
 	private Point center;
 	private float radius;
+	public final Point index;
 
-	public final float RADIUS_SCALE = 1;
+	public final float RADIUS_SCALE = 2;
 	public final color FILL_COLOR = color(50, 50, 50);
 	public final color STROKE_COLOR = color(0, 0, 0);
+	public final color TEXT_COLOR = color(255, 0, 0);
 
 	// Defaults center to left corner
-	public ElementView(Element element) {
+	public ElementView(Element element, Point index) {
 		this.element = element;
 		this.radius = this.element.data * RADIUS_SCALE;
 		this.center = new Point(0, 0);
+		this.index = index;
 	}
 
 	public Point getCenter() {
@@ -37,8 +40,18 @@ class ElementView {
 
 		// Draw function takes in diameter, must scale radius
 		ellipse(center.x, center.y, 2 * radius, 2 * radius);
-		// println("Just rendered: x = " + center.x + ", y = " + 
-			// center.y + ", radius = " + radius);
+
+		fill(TEXT_COLOR);
+		textAlign(CENTER, CENTER);
+		text(element.id, center.x, center.y);
+
+	}
+
+	public void tPrint() {
+		println("id = " + element.id);
+		println("data = " + element.data);
+		println("Index = (" + index.x + ", " + index.y + ")");
+		println();
 	}
 
 }
