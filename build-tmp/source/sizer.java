@@ -24,13 +24,13 @@ public void setup() {
 	size(1400, 800);
 
 	// Create parser
-	Parser p = new Parser("Obesity.csv", "StateMatrix.csv");
+	Parser p = new Parser("area_abbd.csv", "StateMatrix.csv");
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 
 	// Create Grid
 	float offset = 0;
-	Rect bounds = new Rect(new Point(offset, offset * 2), 
+	Rect bounds = new Rect(new Point(offset, offset * 2),
 		new Size(width - offset, height - offset * 2));
 	Point dims = new Point(14, 6);
 	g = new ElementGrid(els, h, dims, bounds);
@@ -72,6 +72,7 @@ class ElementGrid{
 	private float elemHeightPct;
 
 	public final float PADDING_PCT = 0.02f;
+	public final float BIGGEST_RAD = 64.0f;
 
 	public ElementGrid(ArrayList<Element> elements, HashMap<String, Point>
 		stateMap, Point dimensions, Rect bounds) {
@@ -81,7 +82,33 @@ class ElementGrid{
 
 		makeElementViews(elements, stateMap);
 		calculateElemContainer();
+		scaleRadii();
 
+	}
+
+	// Scales radii so bubbles fit on the screen
+	private void scaleRadii() {
+		float maxRad = getMaxInitRad();
+
+		for (ElementView e : elementViews) {
+			float currentRad = e.getRadius();
+			e.setRadius((BIGGEST_RAD * currentRad) / maxRad);
+		}
+
+	}
+
+	private float getMaxInitRad() {
+		float toReturn = 0.0f;
+
+		for (ElementView e : elementViews) {
+			float currentRad = e.getRadius();
+
+			if (currentRad > toReturn) {
+				toReturn = currentRad;
+			}
+		}
+
+		return toReturn;
 	}
 
 	// Wraps each element in an ElementView and adds it to
@@ -119,47 +146,6 @@ class ElementGrid{
 		}
 	}
 
-	// public void render() {
-	// 	float xPctUsed = 0.0;
-	// 	float yPctUsed = 0.0;
-
-	// 	// println("Bounds_X = " + bounds.s.w + ", Bounds_Y = " + bounds.s.h);
-
-	// 	for (ElementView e : elementViews) {
-	// 		e.setRadius(35);
-	// 		float radius = e.getRadius();
-
-	// 		float xPct = getXPct(radius) + PADDING_PCT;
-	// 		float yPct = getYPct(radius) + PADDING_PCT;
-	// 		float xCent = getXCoord(xPct + xPctUsed);
-	// 		float yCent = getYCoord(yPct + yPctUsed);
-
-	// 		// If the next element would fall off the screen -- recalculate
-	// 		if (xPct + xPctUsed + getXPct(radius) + PADDING_PCT >= 1) { 
-	// 			xPctUsed = 0.0;
-	// 			yPctUsed += yPct * 2;
-	// 			xCent = getXCoord(xPct + xPctUsed);
-	// 			yCent = getYCoord(yPct + yPctUsed);
-	// 		} else {
-	// 			xPctUsed += xPct * 2; // Only update xPctUsed
-	// 		}
-
-	// 		// Bounds control for height just GTFO
-	// 		if (yPct + yPctUsed + getYPct(radius) + PADDING_PCT >= 1) {
-	// 			println("ERROR: Not enough room to display all elements in view");
-	// 			System.exit(1);
-	// 		}
-
-
-
-
-	// 		e.setCenter(new Point(xCent, yCent));
-	// 		e.render();	
-
-	// 	}
-
-
-	// }
 
 	// Coordinate system is from 0 to 1, these functions
 	// convert back to the real coordinate system
