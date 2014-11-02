@@ -6,7 +6,7 @@ void setup() {
 	size(1400, 800);
 
 	// Create parser
-	Parser p = new Parser("area_abbd.csv", "StateMatrix.csv");
+	Parser p = new Parser("AvgTemps.csv", "StateMatrix.csv");
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 
