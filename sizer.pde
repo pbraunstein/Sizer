@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.util.Arrays;
 
 ElementGrid g;
 
@@ -6,7 +7,7 @@ void setup() {
 	size(1400, 800);
 
 	// Create parser
-	Parser p = new Parser("AvgTemps.csv", "StateMatrix.csv");
+	Parser p = new Parser("combined.csv", "StateMatrix.csv");
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 
@@ -26,14 +27,13 @@ void printTest(HashMap<String, Point> t) {
 	}
 }
 
-void printTest(ArrayList<Element> l) {
-	for (Element e : l) {
-		println("ID = " + e.id + " , Temp = " + e.data);
-	}
-}
+// void printTest(ArrayList<Element> l) {
+// 	for (Element e : l) {
+// 		println("ID = " + e.id + " , Temp = " + e.data);
+// 	}
+// }
 
 void draw() {
 	background(255, 255, 255);
 	g.render();
-
 }

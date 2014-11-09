@@ -101,10 +101,10 @@ class ElementGrid{
 		return (yVal) / bounds.s.h;
 	}
 
-	public void tPrint() {
-		for (ElementView e : elementViews) {
-			e.tPrint();
-		}
-	}
+	// public void tPrint() {
+	// 	for (ElementView e : elementViews) {
+	// 		e.tPrint();
+	// 	}
+	// }
  
 }

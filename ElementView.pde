@@ -3,6 +3,7 @@ class ElementView {
 	private Point center;
 	private float radius;
 	public final Point index;
+	private String dataMode;
 
 	public final float RADIUS_SCALE = 2;
 	public final color FILL_COLOR = color(50, 50, 50);
@@ -11,10 +12,23 @@ class ElementView {
 
 	// Defaults center to left corner
 	public ElementView(Element element, Point index) {
+		this.dataMode = GDP;
 		this.element = element;
-		this.radius = this.element.data * RADIUS_SCALE;
+		this.radius = this.element.getData(dataMode) * RADIUS_SCALE;
 		this.center = new Point(0, 0);
 		this.index = index;
+	}
+
+	public String getDataMode() {
+		return dataMode;
+	}
+
+	public void setDataMode(String s) {
+		if (!Arrays.asList(VALID_DATA_MODES).contains(s)) {
+			println("ERROR: Invalid Data Mode: " + s);
+			System.exit(1);
+		}
+		dataMode = s;
 	}
 
 	public Point getCenter() {
@@ -47,11 +61,11 @@ class ElementView {
 
 	}
 
-	public void tPrint() {
-		println("id = " + element.id);
-		println("data = " + element.data);
-		println("Index = (" + index.x + ", " + index.y + ")");
-		println();
-	}
+	// public void tPrint() {
+	// 	println("id = " + element.id);
+	// 	println("data = " + element.data);
+	// 	println("Index = (" + index.x + ", " + index.y + ")");
+	// 	println();
+	// }
 
 }

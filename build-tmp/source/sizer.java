@@ -4,6 +4,7 @@ import processing.event.*;
 import processing.opengl.*; 
 
 import java.util.Map; 
+import java.util.Arrays; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -18,13 +19,14 @@ public class sizer extends PApplet {
 
 
 
+
 ElementGrid g;
 
 public void setup() {
 	size(1400, 800);
 
 	// Create parser
-	Parser p = new Parser("AvgTemps.csv", "StateMatrix.csv");
+	Parser p = new Parser("combined.csv", "StateMatrix.csv");
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 
@@ -44,24 +46,66 @@ public void printTest(HashMap<String, Point> t) {
 	}
 }
 
-public void printTest(ArrayList<Element> l) {
-	for (Element e : l) {
-		println("ID = " + e.id + " , Temp = " + e.data);
-	}
-}
+// void printTest(ArrayList<Element> l) {
+// 	for (Element e : l) {
+// 		println("ID = " + e.id + " , Temp = " + e.data);
+// 	}
+// }
 
 public void draw() {
 	background(255, 255, 255);
 	g.render();
+	g.elementViews.get(0).setDataMode("TEMP");
 
 }
+public final String GDP = "GDP";
+public final String AREA = "AREA";
+public final String OBESITY_PCT = "OBESITY_PCT";
+public final String POPULATION = "POPULATION";
+public final String TEMP = "TEMP";
+
+public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP};
 class Element {
 	public final String id;
-	public final float data;
+	public final float gdp;
+	public final float area;
+	public final float obesityPct;
+	public final float population;
+	public final float temp;
 
-	public Element(String id, float data) {
+
+	public Element(String id, float gdp, float area, float obesityPct,
+		float population, float temp) {
 		this.id = id;
-		this.data = data;
+		this.gdp = gdp;
+		this.area = area;
+		this.obesityPct = obesityPct;
+		this.population = population;
+		this.temp = temp;
+	}
+
+	public float getData(String dataMode) {
+		if (dataMode.equals(GDP)) {
+			return gdp;
+		}
+
+		if (dataMode.equals(AREA)) {
+			return area;
+		}
+
+		if (dataMode.equals(OBESITY_PCT)) {
+			return obesityPct;
+		}
+
+		if (dataMode.equals(POPULATION)) {
+			return population;
+		}
+
+		if (dataMode.equals(TEMP)) {
+			return temp;
+		}
+
+		return Float.NaN;
 	}
 }
 class ElementGrid{
@@ -167,11 +211,11 @@ class ElementGrid{
 		return (yVal) / bounds.s.h;
 	}
 
-	public void tPrint() {
-		for (ElementView e : elementViews) {
-			e.tPrint();
-		}
-	}
+	// public void tPrint() {
+	// 	for (ElementView e : elementViews) {
+	// 		e.tPrint();
+	// 	}
+	// }
  
 }
 class ElementView {
@@ -179,6 +223,7 @@ class ElementView {
 	private Point center;
 	private float radius;
 	public final Point index;
+	private String dataMode;
 
 	public final float RADIUS_SCALE = 2;
 	public final int FILL_COLOR = color(50, 50, 50);
@@ -187,10 +232,23 @@ class ElementView {
 
 	// Defaults center to left corner
 	public ElementView(Element element, Point index) {
+		this.dataMode = GDP;
 		this.element = element;
-		this.radius = this.element.data * RADIUS_SCALE;
+		this.radius = this.element.getData(dataMode) * RADIUS_SCALE;
 		this.center = new Point(0, 0);
 		this.index = index;
+	}
+
+	public String getDataMode() {
+		return dataMode;
+	}
+
+	public void setDataMode(String s) {
+		if (!Arrays.asList(VALID_DATA_MODES).contains(s)) {
+			println("ERROR: Invalid Data Mode: " + s);
+			System.exit(1);
+		}
+		dataMode = s;
 	}
 
 	public Point getCenter() {
@@ -223,12 +281,12 @@ class ElementView {
 
 	}
 
-	public void tPrint() {
-		println("id = " + element.id);
-		println("data = " + element.data);
-		println("Index = (" + index.x + ", " + index.y + ")");
-		println();
-	}
+	// public void tPrint() {
+	// 	println("id = " + element.id);
+	// 	println("data = " + element.data);
+	// 	println("Index = (" + index.x + ", " + index.y + ")");
+	// 	println();
+	// }
 
 }
 class Point {
@@ -268,7 +326,11 @@ class Parser {
 
 	// Data File Columns
 	public final int ID_COL = 0;
-	public final int VAL_COL = 1;
+	public final int GDP_COL = 1;
+	public final int AREA_COL = 2;
+	public final int OBESE_COL = 3;
+	public final int POP_COL = 4;
+	public final int TEMP_COL = 5;
 
 	// Map File Columns
 	public final int STATE_COL = 0;
@@ -292,7 +354,9 @@ class Parser {
 
 			String[] listL = split(l, ',');
 
-			dieListe.add(new Element(listL[ID_COL], Float.parseFloat(listL[VAL_COL])));
+			dieListe.add(new Element(listL[ID_COL], Float.parseFloat(listL[GDP_COL]),
+				Float.parseFloat(listL[AREA_COL]), Float.parseFloat(listL[OBESE_COL]),
+				Float.parseFloat(listL[POP_COL]), Float.parseFloat(listL[TEMP_COL])));
 
 		}
 
