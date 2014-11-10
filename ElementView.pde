@@ -3,7 +3,7 @@ class ElementView {
 	private Point center;
 	private float radius;
 	public final Point index;
-	private String dataMode;
+	private String dataMode = DEFAULT_VAL;
 
 	public final float RADIUS_SCALE = 2;
 	public final color FILL_COLOR = color(50, 50, 50);
@@ -12,7 +12,6 @@ class ElementView {
 
 	// Defaults center to left corner
 	public ElementView(Element element, Point index) {
-		this.dataMode = GDP;
 		this.element = element;
 		this.radius = this.element.getData(dataMode) * RADIUS_SCALE;
 		this.center = new Point(0, 0);
@@ -24,11 +23,8 @@ class ElementView {
 	}
 
 	public void setDataMode(String s) {
-		if (!Arrays.asList(VALID_DATA_MODES).contains(s)) {
-			println("ERROR: Invalid Data Mode: " + s);
-			System.exit(1);
-		}
 		dataMode = s;
+		radius = element.getData(dataMode) * RADIUS_SCALE;
 	}
 
 	public Point getCenter() {

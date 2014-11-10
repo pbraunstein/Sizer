@@ -21,6 +21,7 @@ public class sizer extends PApplet {
 
 
 ElementGrid g;
+Kontroller k;
 
 public void setup() {
 	size(1400, 800);
@@ -30,41 +31,22 @@ public void setup() {
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 
-	// Create Grid
-	float offset = 0;
-	Rect bounds = new Rect(new Point(offset, offset * 2),
-		new Size(width - offset, height - offset * 2));
-	Point dims = new Point(14, 6);
-	g = new ElementGrid(els, h, dims, bounds);
-
+	k = new Kontroller(els, h, new Point(14, 6), new Rect(new Point(0, 0),
+		new Size(width, height)));
 }
-
-public void printTest(HashMap<String, Point> t) {
-	for (Map.Entry me : t.entrySet()) {
-		Point p = (Point)me.getValue();
-		println(me.getKey() + ": (" + p.x  + ", " + p.y + ")");
-	}
-}
-
-// void printTest(ArrayList<Element> l) {
-// 	for (Element e : l) {
-// 		println("ID = " + e.id + " , Temp = " + e.data);
-// 	}
-// }
 
 public void draw() {
 	background(255, 255, 255);
-	g.render();
-	g.elementViews.get(0).setDataMode("TEMP");
-
+	k.render();
 }
 public final String GDP = "GDP";
 public final String AREA = "AREA";
 public final String OBESITY_PCT = "OBESITY_PCT";
 public final String POPULATION = "POPULATION";
 public final String TEMP = "TEMP";
+public final String DEFAULT_VAL = GDP;
 
-public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP};
+public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP, DEFAULT_VAL};
 class Element {
 	public final String id;
 	public final float gdp;
@@ -114,6 +96,7 @@ class ElementGrid{
 	private Point dimensions;
 	private float elemWidthPct;
 	private float elemHeightPct;
+	private String dataMode = DEFAULT_VAL;
 
 	public final float PADDING_PCT = 0.02f;
 	public final float BIGGEST_RAD = 64.0f;
@@ -175,6 +158,7 @@ class ElementGrid{
 
 	public void render() {
 		for (ElementView e : elementViews) {
+			
 			Point index = e.index;
 			// e.setRadius(50);
 			float rad = e.getRadius();
@@ -188,6 +172,14 @@ class ElementGrid{
 
 			e.render();
 		}
+	}
+
+	public void setDataMode(String s) {
+		dataMode = s;
+		for (ElementView ev : elementViews) {
+			ev.setDataMode(s);
+		}
+		scaleRadii();  // OMG THIS WAS A GREAT DECISION
 	}
 
 
@@ -210,12 +202,6 @@ class ElementGrid{
 	public float getYPct(float yVal) {
 		return (yVal) / bounds.s.h;
 	}
-
-	// public void tPrint() {
-	// 	for (ElementView e : elementViews) {
-	// 		e.tPrint();
-	// 	}
-	// }
  
 }
 class ElementView {
@@ -223,7 +209,7 @@ class ElementView {
 	private Point center;
 	private float radius;
 	public final Point index;
-	private String dataMode;
+	private String dataMode = DEFAULT_VAL;
 
 	public final float RADIUS_SCALE = 2;
 	public final int FILL_COLOR = color(50, 50, 50);
@@ -232,7 +218,6 @@ class ElementView {
 
 	// Defaults center to left corner
 	public ElementView(Element element, Point index) {
-		this.dataMode = GDP;
 		this.element = element;
 		this.radius = this.element.getData(dataMode) * RADIUS_SCALE;
 		this.center = new Point(0, 0);
@@ -244,11 +229,8 @@ class ElementView {
 	}
 
 	public void setDataMode(String s) {
-		if (!Arrays.asList(VALID_DATA_MODES).contains(s)) {
-			println("ERROR: Invalid Data Mode: " + s);
-			System.exit(1);
-		}
 		dataMode = s;
+		radius = element.getData(dataMode) * RADIUS_SCALE;
 	}
 
 	public Point getCenter() {
@@ -318,6 +300,42 @@ class Rect {
 	public Rect(Point o, Size s) {
 		this.o = o;
 		this.s = s;
+	}
+}
+class Kontroller {
+	private ElementGrid eg;
+	private String dataMode = DEFAULT_VAL;
+
+	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
+		Point dimensions, Rect bounds) {
+		Rect newBounds = new Rect(new Point(bounds.o.x, bounds.o.y / (bounds.s.h * 0.1f)), 
+			new Size(bounds.s.w * 0.9f, bounds.s.h));
+		eg = new ElementGrid(elements, stateMap, dimensions, newBounds);
+		setDataMode(AREA);
+	}
+
+	public ElementGrid getElementGrid() {
+		return eg;
+	}
+
+	public String getDataMode() {
+		return dataMode;
+	}
+
+	public void setDataMode(String s) {
+		this.dataMode = s;
+
+		// Make sure it is a valid mode
+		if (!Arrays.asList(VALID_DATA_MODES).contains(s)) {
+			println("ERROR: Invalid Data Mode: " + s);
+			System.exit(1);
+		}
+
+		eg.setDataMode(s);
+	}
+
+	public void render() {
+		eg.render();
 	}
 }
 class Parser {

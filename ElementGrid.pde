@@ -4,6 +4,7 @@ class ElementGrid{
 	private Point dimensions;
 	private float elemWidthPct;
 	private float elemHeightPct;
+	private String dataMode = DEFAULT_VAL;
 
 	public final float PADDING_PCT = 0.02;
 	public final float BIGGEST_RAD = 64.0;
@@ -65,6 +66,7 @@ class ElementGrid{
 
 	public void render() {
 		for (ElementView e : elementViews) {
+			
 			Point index = e.index;
 			// e.setRadius(50);
 			float rad = e.getRadius();
@@ -78,6 +80,14 @@ class ElementGrid{
 
 			e.render();
 		}
+	}
+
+	public void setDataMode(String s) {
+		dataMode = s;
+		for (ElementView ev : elementViews) {
+			ev.setDataMode(s);
+		}
+		scaleRadii();  // OMG THIS WAS A GREAT DECISION
 	}
 
 
@@ -100,11 +110,5 @@ class ElementGrid{
 	public float getYPct(float yVal) {
 		return (yVal) / bounds.s.h;
 	}
-
-	// public void tPrint() {
-	// 	for (ElementView e : elementViews) {
-	// 		e.tPrint();
-	// 	}
-	// }
  
 }
