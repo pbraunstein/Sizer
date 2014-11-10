@@ -1,0 +1,2 @@
+Have controller have areas for displaying title and button. Make Kontroller
+coordinate these.

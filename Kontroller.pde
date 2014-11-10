@@ -1,11 +1,12 @@
 class Kontroller {
 	private ElementGrid eg;
 	private String dataMode = DEFAULT_VAL;
+	public final float PADDING_PCT = 0.9;
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
-		Rect newBounds = new Rect(new Point(bounds.o.x, bounds.o.y / (bounds.s.h * 0.1)), 
-			new Size(bounds.s.w * 0.9, bounds.s.h));
+		Rect newBounds = new Rect(new Point(bounds.o.x, bounds.o.y + bounds.s.h * (1 - PADDING_PCT)), 
+			new Size(bounds.s.w * PADDING_PCT, bounds.s.h * PADDING_PCT));
 		eg = new ElementGrid(elements, stateMap, dimensions, newBounds);
 		setDataMode(AREA);
 	}
