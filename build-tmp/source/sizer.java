@@ -22,6 +22,7 @@ public class sizer extends PApplet {
 
 ElementGrid g;
 Kontroller k;
+Button b;
 
 public void setup() {
 	size(1400, 800);
@@ -33,11 +34,35 @@ public void setup() {
 
 	k = new Kontroller(els, h, new Point(14, 6), new Rect(new Point(0, 0),
 		new Size(width, height)));
+	b = new Button(new Point(width / 2, 10), new Size(width / 2 - 10, height - 20), "plop");
 }
 
 public void draw() {
 	background(255, 255, 255);
 	k.render();
+	b.render();
+}
+class Button extends Rect {
+	private String label;
+	public int FONT_SIZE = 30;
+
+	public Button(Point o, Size s, String label) {
+		super(o, s);
+		this.label = label;
+	}
+
+	public void render() {
+		line(o.x, o.y, o.x + s.w, o.y);
+		line(o.x, o.y, o.x, o.y + s.h);
+		line(o.x, o.y + s.h, o.x + s.w, o.y + s.h);
+		line(o.x + s.w, o.y, o.x + s.w, o.y + s.h);
+		textAlign(CENTER, CENTER);
+		textSize(FONT_SIZE);
+		fill(color(0, 0, 0));
+		text(label, o.x + s.w / 2, o.y + s.h / 2);
+	}
+
+
 }
 public final String GDP = "GDP";
 public final String AREA = "AREA";
@@ -212,6 +237,7 @@ class ElementView {
 	private String dataMode = DEFAULT_VAL;
 
 	public final float RADIUS_SCALE = 2;
+	public final int FONT_SIZE = 14;
 	public final int FILL_COLOR = color(50, 50, 50);
 	public final int STROKE_COLOR = color(0, 0, 0);
 	public final int TEXT_COLOR = color(255, 0, 0);
@@ -258,6 +284,7 @@ class ElementView {
 		ellipse(center.x, center.y, 2 * radius, 2 * radius);
 
 		fill(TEXT_COLOR);
+		textSize(FONT_SIZE);
 		textAlign(CENTER, CENTER);
 		text(element.id, center.x, center.y);
 
