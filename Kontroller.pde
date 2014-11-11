@@ -45,7 +45,13 @@ class Kontroller {
 		eg.setDataMode(s);
 	}
 
+	private void drawSeparators() {
+		line(titleDims.o.x, titleDims.o.y + titleDims.s.h, titleDims.o.x + titleDims.s.w, titleDims.o.y + titleDims.s.h);
+		line(mapDims.o.x + mapDims.s.w, mapDims.o.y, mapDims.o.x + mapDims.s.w, mapDims.o.y + mapDims.s.h);
+	}
+
 	public void render() {
+		drawSeparators();
 		eg.render();
 		l.render();
 	}
