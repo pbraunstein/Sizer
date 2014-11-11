@@ -1,13 +1,27 @@
 class Kontroller {
 	private ElementGrid eg;
+	private Label l;
 	private String dataMode = DEFAULT_VAL;
-	public final float PADDING_PCT = 0.9;
+	public final float MAP_PADDING_PCT = 0.9;
+
+	// Dimensions of Sub Views
+	private Rect mapDims;
+	private Rect titleDims;
+	private Rect buttonsDims;
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
-		Rect newBounds = new Rect(new Point(bounds.o.x, bounds.o.y + bounds.s.h * (1 - PADDING_PCT)), 
-			new Size(bounds.s.w * PADDING_PCT, bounds.s.h * PADDING_PCT));
-		eg = new ElementGrid(elements, stateMap, dimensions, newBounds);
+
+		// Calculate bounds of children
+		mapDims = new Rect(new Point(bounds.o.x, bounds.o.y + bounds.s.h * (1 - MAP_PADDING_PCT)), 
+			new Size(bounds.s.w * MAP_PADDING_PCT, bounds.s.h * MAP_PADDING_PCT));
+		titleDims = new Rect(new Point(bounds.o.x, bounds.o.y), 
+			new Size(bounds.s.w, bounds.s.h - bounds.s.h * MAP_PADDING_PCT));
+
+		// Instantiate children
+		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
+		l = new Label(titleDims, "Fuck Off!");
+
 		setDataMode(AREA);
 	}
 
@@ -33,5 +47,6 @@ class Kontroller {
 
 	public void render() {
 		eg.render();
+		l.render();
 	}
 }

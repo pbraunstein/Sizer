@@ -40,7 +40,6 @@ public void setup() {
 public void draw() {
 	background(255, 255, 255);
 	k.render();
-	// b.render();
 }
 class Button extends Rect {
 	private String label;
@@ -62,6 +61,14 @@ class Button extends Rect {
 		text(label, o.x + s.w / 2, o.y + s.h / 2);
 	}
 
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String s) {
+		label = s;
+	}
+
 
 }
 public final String GDP = "GDP";
@@ -70,6 +77,7 @@ public final String OBESITY_PCT = "OBESITY_PCT";
 public final String POPULATION = "POPULATION";
 public final String TEMP = "TEMP";
 public final String DEFAULT_VAL = GDP;
+public final int BLACK = color(0, 0, 0);
 
 public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP, DEFAULT_VAL};
 class Element {
@@ -328,17 +336,39 @@ class Rect {
 		this.o = o;
 		this.s = s;
 	}
+
+
+	// Mostly used for debugging and silliness
+	public final int PURPLE = color(128, 0, 128);
+	public void fillPurple() {
+		fill(PURPLE);
+		rect(o.x, o.y, s.w, s.h);
+	}
 }
 class Kontroller {
 	private ElementGrid eg;
+	private Label l;
 	private String dataMode = DEFAULT_VAL;
-	public final float PADDING_PCT = 0.9f;
+	public final float MAP_PADDING_PCT = 0.9f;
+
+	// Dimensions of Sub Views
+	private Rect mapDims;
+	private Rect titleDims;
+	private Rect buttonsDims;
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
-		Rect newBounds = new Rect(new Point(bounds.o.x, bounds.o.y + bounds.s.h * (1 - PADDING_PCT)), 
-			new Size(bounds.s.w * PADDING_PCT, bounds.s.h * PADDING_PCT));
-		eg = new ElementGrid(elements, stateMap, dimensions, newBounds);
+
+		// Calculate bounds of children
+		mapDims = new Rect(new Point(bounds.o.x, bounds.o.y + bounds.s.h * (1 - MAP_PADDING_PCT)), 
+			new Size(bounds.s.w * MAP_PADDING_PCT, bounds.s.h * MAP_PADDING_PCT));
+		titleDims = new Rect(new Point(bounds.o.x, bounds.o.y), 
+			new Size(bounds.s.w, bounds.s.h - bounds.s.h * MAP_PADDING_PCT));
+
+		// Instantiate children
+		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
+		l = new Label(titleDims, "Fuck Off!");
+
 		setDataMode(AREA);
 	}
 
@@ -364,7 +394,40 @@ class Kontroller {
 
 	public void render() {
 		eg.render();
+		l.render();
 	}
+}
+class Label {
+	public final Rect bounds;
+	private String labelText;
+	private Point center;
+
+	public Label(Rect bounds, String labelText) {
+		this.bounds = bounds;
+		this.labelText = labelText;
+		center = calculateCenter();
+	}
+
+	private Point calculateCenter() {
+		return new Point(bounds.o.x + bounds.s.w / 2, bounds.o.y + bounds.s.h / 2);
+	}
+
+	public String getLabelText() {
+		return labelText;
+	}
+
+	public void setLabelText(String s) {
+		labelText = s;
+	}
+
+	public void render() {
+		textAlign(CENTER, CENTER);
+		fill(BLACK);
+		textSize(26);
+		text(labelText, center.x, center.y);
+	}
+
+
 }
 class Parser {
 	public final String dataFile;

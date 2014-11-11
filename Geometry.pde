@@ -28,4 +28,12 @@ class Rect {
 		this.o = o;
 		this.s = s;
 	}
+
+
+	// Mostly used for debugging and silliness
+	public final color PURPLE = color(128, 0, 128);
+	public void fillPurple() {
+		fill(PURPLE);
+		rect(o.x, o.y, s.w, s.h);
+	}
 }

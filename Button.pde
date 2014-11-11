@@ -18,5 +18,13 @@ class Button extends Rect {
 		text(label, o.x + s.w / 2, o.y + s.h / 2);
 	}
 
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String s) {
+		label = s;
+	}
+
 
 }
