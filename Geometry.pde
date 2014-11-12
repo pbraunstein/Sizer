@@ -29,6 +29,11 @@ class Rect {
 		this.s = s;
 	}
 
+	public String toString() {
+		return "Origin = (" + o.x + ", " + o.y + ")\n" + "Size = (" +
+			s.w + ", " + s.h + ")";
+	}
+
 
 	// Mostly used for debugging and silliness
 	public final color PURPLE = color(128, 0, 128);

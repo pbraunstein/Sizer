@@ -43,7 +43,7 @@ public void draw() {
 }
 class Button extends Rect {
 	private String label;
-	public int FONT_SIZE = 30;
+	public int FONT_SIZE = 20;
 
 	public Button(Point o, Size s, String label) {
 		super(o, s);
@@ -57,7 +57,7 @@ class Button extends Rect {
 		line(o.x + s.w, o.y, o.x + s.w, o.y + s.h);
 		textAlign(CENTER, CENTER);
 		textSize(FONT_SIZE);
-		fill(color(0, 0, 0));
+		fill(BLACK);
 		text(label, o.x + s.w / 2, o.y + s.h / 2);
 	}
 
@@ -69,17 +69,68 @@ class Button extends Rect {
 		label = s;
 	}
 
-
+	// Returns true if the x y coord submitted
+	// is in the bounds of the button
+	public boolean hit(float x, float y) {
+		if (x <= (o.x + s.w) && x >= o.x ) {
+			if (y <= (o.y + s.h) && y >= o.y) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
-public final String GDP = "GDP";
-public final String AREA = "AREA";
-public final String OBESITY_PCT = "OBESITY_PCT";
-public final String POPULATION = "POPULATION";
-public final String TEMP = "TEMP";
+class ButtonManager {
+	private ArrayList<Button> buttons;
+	private Rect bounds;
+
+	public final float PCT_X_PADDING = 0.1f;
+	public final float PCT_Y_PADDING = 0.01f;
+
+
+	public ButtonManager(String[] buttonsToMake, Rect bounds) {
+		this.bounds = bounds;
+		makeButtons(buttonsToMake);
+	}
+
+	private void makeButtons(String[] buttonsToMake) {
+		buttons = new ArrayList<Button>();
+
+		Size buttonSize = getButtonSize(buttonsToMake.length);
+
+		float xCoord = bounds.o.x + bounds.o.x * PCT_X_PADDING;
+		float yCoord = bounds.o.y + bounds.o.y * PCT_Y_PADDING;
+
+		for (String s : buttonsToMake) {
+			buttons.add(new Button(new Point(xCoord, yCoord),
+				buttonSize, s));
+
+			yCoord += buttonSize.h + buttonSize.h * PCT_Y_PADDING;
+		}
+	}
+
+	private Size getButtonSize(int numButtons) {
+		float w = bounds.s.w - (bounds.s.w * PCT_X_PADDING);
+		float h = bounds.s.h / numButtons;
+
+		return new Size(w, h);
+	}
+
+	public void render() {
+		for (Button b : buttons) {
+			b.render();
+		}
+	}
+}
+public final String GDP = "GSP";
+public final String AREA = "Area";
+public final String OBESITY_PCT = "Obesity";
+public final String POPULATION = "Population";
+public final String TEMP = "Temp";
 public final String DEFAULT_VAL = GDP;
 public final int BLACK = color(0, 0, 0);
 
-public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP, DEFAULT_VAL};
+
 class Element {
 	public final String id;
 	public final float gdp;
@@ -337,6 +388,11 @@ class Rect {
 		this.s = s;
 	}
 
+	public String toString() {
+		return "Origin = (" + o.x + ", " + o.y + ")\n" + "Size = (" +
+			s.w + ", " + s.h + ")";
+	}
+
 
 	// Mostly used for debugging and silliness
 	public final int PURPLE = color(128, 0, 128);
@@ -348,6 +404,8 @@ class Rect {
 class Kontroller {
 	private ElementGrid eg;
 	private Label l;
+	private ButtonManager bm;
+
 	private String dataMode = DEFAULT_VAL;
 	public final float MAP_PADDING_PCT = 0.9f;
 
@@ -355,6 +413,8 @@ class Kontroller {
 	private Rect mapDims;
 	private Rect titleDims;
 	private Rect buttonsDims;
+
+	public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP};
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
@@ -364,10 +424,13 @@ class Kontroller {
 			new Size(bounds.s.w * MAP_PADDING_PCT, bounds.s.h * MAP_PADDING_PCT));
 		titleDims = new Rect(new Point(bounds.o.x, bounds.o.y), 
 			new Size(bounds.s.w, bounds.s.h - bounds.s.h * MAP_PADDING_PCT));
+		buttonsDims = new Rect(new Point(mapDims.o.x + mapDims.s.w, mapDims.o.y),
+			new Size(bounds.s.w - mapDims.s.w, bounds.s.h - titleDims.s.h));
 
 		// Instantiate children
 		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
 		l = new Label(titleDims, "Fuck Off!");
+		bm = new ButtonManager(VALID_DATA_MODES, buttonsDims);
 
 		setDataMode(AREA);
 	}
@@ -401,6 +464,7 @@ class Kontroller {
 		drawSeparators();
 		eg.render();
 		l.render();
+		bm.render();
 	}
 }
 class Label {

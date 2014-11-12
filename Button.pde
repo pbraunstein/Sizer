@@ -1,6 +1,6 @@
 class Button extends Rect {
 	private String label;
-	public int FONT_SIZE = 30;
+	public int FONT_SIZE = 20;
 
 	public Button(Point o, Size s, String label) {
 		super(o, s);
@@ -14,7 +14,7 @@ class Button extends Rect {
 		line(o.x + s.w, o.y, o.x + s.w, o.y + s.h);
 		textAlign(CENTER, CENTER);
 		textSize(FONT_SIZE);
-		fill(color(0, 0, 0));
+		fill(BLACK);
 		text(label, o.x + s.w / 2, o.y + s.h / 2);
 	}
 
@@ -26,5 +26,14 @@ class Button extends Rect {
 		label = s;
 	}
 
-
+	// Returns true if the x y coord submitted
+	// is in the bounds of the button
+	public boolean hit(float x, float y) {
+		if (x <= (o.x + s.w) && x >= o.x ) {
+			if (y <= (o.y + s.h) && y >= o.y) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

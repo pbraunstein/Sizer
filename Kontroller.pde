@@ -1,6 +1,8 @@
 class Kontroller {
 	private ElementGrid eg;
 	private Label l;
+	private ButtonManager bm;
+
 	private String dataMode = DEFAULT_VAL;
 	public final float MAP_PADDING_PCT = 0.9;
 
@@ -8,6 +10,8 @@ class Kontroller {
 	private Rect mapDims;
 	private Rect titleDims;
 	private Rect buttonsDims;
+
+	public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP};
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
@@ -17,10 +21,13 @@ class Kontroller {
 			new Size(bounds.s.w * MAP_PADDING_PCT, bounds.s.h * MAP_PADDING_PCT));
 		titleDims = new Rect(new Point(bounds.o.x, bounds.o.y), 
 			new Size(bounds.s.w, bounds.s.h - bounds.s.h * MAP_PADDING_PCT));
+		buttonsDims = new Rect(new Point(mapDims.o.x + mapDims.s.w, mapDims.o.y),
+			new Size(bounds.s.w - mapDims.s.w, bounds.s.h - titleDims.s.h));
 
 		// Instantiate children
 		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
 		l = new Label(titleDims, "Fuck Off!");
+		bm = new ButtonManager(VALID_DATA_MODES, buttonsDims);
 
 		setDataMode(AREA);
 	}
@@ -54,5 +61,6 @@ class Kontroller {
 		drawSeparators();
 		eg.render();
 		l.render();
+		bm.render();
 	}
 }
