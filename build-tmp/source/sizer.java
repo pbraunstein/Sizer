@@ -144,6 +144,7 @@ class ButtonManager {
 	}
 
 	public void render() {
+		bounds.fillColor(WHITE);  // To overlap out of bounds spheres
 		for (Button b : buttons) {
 			if (b == selected) {
 				b.render(true);
@@ -432,6 +433,11 @@ class Rect {
 			}
 		}
 		return false;
+	}
+
+	public void fillColor(int toFill) {
+		fill(toFill);
+		rect(o.x, o.y, s.w, s.h);
 	}
 
 

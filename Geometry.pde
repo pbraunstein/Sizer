@@ -43,6 +43,11 @@ class Rect {
 		return false;
 	}
 
+	public void fillColor(color toFill) {
+		fill(toFill);
+		rect(o.x, o.y, s.w, s.h);
+	}
+
 
 	// Mostly used for debugging and silliness
 	public final color PURPLE = color(128, 0, 128);
