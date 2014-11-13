@@ -101,10 +101,11 @@ class ButtonManager {
 	public final float PCT_Y_PADDING = 0;
 
 
+	// Makes first button selected by default
 	public ButtonManager(String[] buttonsToMake, Rect bounds) {
 		this.bounds = bounds;
 		makeButtons(buttonsToMake);
-		selected = buttons.get(2);
+		selected = buttons.get(0);
 	}
 
 	private void makeButtons(String[] buttonsToMake) {
@@ -454,7 +455,7 @@ class Kontroller {
 	private Rect titleDims;
 	private Rect buttonsDims;
 
-	public final String[] VALID_DATA_MODES = {GDP, AREA, OBESITY_PCT, POPULATION, TEMP};
+	public final String[] VALID_DATA_MODES = {AREA, GDP, OBESITY_PCT, POPULATION, TEMP};
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
@@ -501,16 +502,20 @@ class Kontroller {
 	}
 
 	// Highlights the button clicked on, checks to make sure clicked is
-	// in the button managers jurisdiction
+	// in the button managers jurisdiction.
+	// Sets the elementGrid mote to be whatever button was pushed
 	public void clicked() {
 	 if (buttonsDims.pointContained(mouseX, mouseY)) {
 			ArrayList<Button> buttons = bm.getButtons();
 			for (Button b : buttons) {
 				if (b.pointContained(mouseX, mouseY)) {
 					bm.setSelected(b);
-					return;  // Get out in case of border
+					int modeIndex = buttons.indexOf(b);
+					setDataMode(VALID_DATA_MODES[modeIndex]);
+					return;
 				}
 			}
+
 		}
 	}
 

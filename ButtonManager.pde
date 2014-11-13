@@ -7,10 +7,11 @@ class ButtonManager {
 	public final float PCT_Y_PADDING = 0;
 
 
+	// Makes first button selected by default
 	public ButtonManager(String[] buttonsToMake, Rect bounds) {
 		this.bounds = bounds;
 		makeButtons(buttonsToMake);
-		selected = buttons.get(2);
+		selected = buttons.get(0);
 	}
 
 	private void makeButtons(String[] buttonsToMake) {
