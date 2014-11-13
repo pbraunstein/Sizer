@@ -1,1 +1,5 @@
-Fix whatever is wrong with the padding on the buttons
+Fix map so it doesn't expand past it's container
+Implement resizing
+Implement animated transitions
+Add equal size component to the map
+Consider changing GSP to GSP per capita

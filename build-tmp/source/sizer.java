@@ -97,9 +97,6 @@ class ButtonManager {
 	private Rect bounds;
 	private Button selected;
 
-	public final float PCT_X_PADDING = 0;
-	public final float PCT_Y_PADDING = 0;
-
 
 	// Makes first button selected by default
 	public ButtonManager(String[] buttonsToMake, Rect bounds) {
@@ -113,14 +110,14 @@ class ButtonManager {
 
 		Size buttonSize = getButtonSize(buttonsToMake.length);
 
-		float xCoord = bounds.o.x + bounds.o.x * PCT_X_PADDING;
+		float xCoord = bounds.o.x;
 		float yCoord = bounds.o.y;
 
 		for (String s : buttonsToMake) {
 			buttons.add(new Button(new Point(xCoord, yCoord),
 				buttonSize, s));
 
-			yCoord += buttonSize.h + buttonSize.h * PCT_Y_PADDING;
+			yCoord += buttonSize.h;
 		}
 	}
 
@@ -137,8 +134,8 @@ class ButtonManager {
 	}
 
 	private Size getButtonSize(int numButtons) {
-		float w = bounds.s.w - (bounds.s.w * PCT_X_PADDING);
-		float h = (bounds.s.h / numButtons) - (bounds.s.h / numButtons) * PCT_Y_PADDING;
+		float w = bounds.s.w;
+		float h = (bounds.s.h / numButtons);
 
 		return new Size(w, h);
 	}
