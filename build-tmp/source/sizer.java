@@ -51,22 +51,19 @@ class Button extends Rect {
 	}
 
 
-	// Inverts colors if mousing over
-	public void render() {
+	// Inverts colors if a button is selected
+	public void render(boolean selected) {
 		line(o.x, o.y, o.x + s.w, o.y);
 		line(o.x, o.y, o.x, o.y + s.h);
 		line(o.x, o.y + s.h, o.x + s.w, o.y + s.h);
 		line(o.x + s.w, o.y, o.x + s.w, o.y + s.h);
-
-		if (mouseX <= (o.x + s.w) && mouseX >= o.x) {
-			if (mouseY <= (o.y + s.h) && mouseY >= o.y) {
-				fill(BLACK);
-				rect(o.x, o.y, s.w, s.h);
-				fill(WHITE);
-				text(label, o.x + s.w / 2, o.y + s.h / 2);
-				return;
-			}
-		}
+		if (selected) {
+			fill(BLACK);
+			rect(o.x, o.y, s.w, s.h);
+			fill(WHITE);
+			text(label, o.x + s.w / 2, o.y + s.h / 2);
+			return;
+		}	
 
 		textAlign(CENTER, CENTER);
 		textSize(FONT_SIZE);
@@ -98,6 +95,7 @@ class Button extends Rect {
 class ButtonManager {
 	private ArrayList<Button> buttons;
 	private Rect bounds;
+	private Button selected;
 
 	public final float PCT_X_PADDING = 0;
 	public final float PCT_Y_PADDING = 0;
@@ -106,6 +104,7 @@ class ButtonManager {
 	public ButtonManager(String[] buttonsToMake, Rect bounds) {
 		this.bounds = bounds;
 		makeButtons(buttonsToMake);
+		selected = buttons.get(2);
 	}
 
 	private void makeButtons(String[] buttonsToMake) {
@@ -124,6 +123,18 @@ class ButtonManager {
 		}
 	}
 
+	public Button getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Button b) {
+		selected = b;
+	}
+
+	public ArrayList<Button> getButtons() {
+		return buttons;
+	}
+
 	private Size getButtonSize(int numButtons) {
 		float w = bounds.s.w - (bounds.s.w * PCT_X_PADDING);
 		float h = (bounds.s.h / numButtons) - (bounds.s.h / numButtons) * PCT_Y_PADDING;
@@ -133,7 +144,11 @@ class ButtonManager {
 
 	public void render() {
 		for (Button b : buttons) {
-			b.render();
+			if (b == selected) {
+				b.render(true);
+			} else {
+				b.render(false);
+			}
 		}
 	}
 }
@@ -409,6 +424,15 @@ class Rect {
 			s.w + ", " + s.h + ")";
 	}
 
+	public boolean pointContained(float x, float y) {
+		if (x >= o.x && x <= (o.x + s.w)) {
+			if (y >= o.y && y <= (o.y + s.h)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	// Mostly used for debugging and silliness
 	public final int PURPLE = color(128, 0, 128);
@@ -474,6 +498,20 @@ class Kontroller {
 	private void drawSeparators() {
 		line(titleDims.o.x, titleDims.o.y + titleDims.s.h, titleDims.o.x + titleDims.s.w, titleDims.o.y + titleDims.s.h);
 		line(mapDims.o.x + mapDims.s.w, mapDims.o.y, mapDims.o.x + mapDims.s.w, mapDims.o.y + mapDims.s.h);
+	}
+
+	// Highlights the button clicked on, checks to make sure clicked is
+	// in the button managers jurisdiction
+	public void clicked() {
+	 if (buttonsDims.pointContained(mouseX, mouseY)) {
+			ArrayList<Button> buttons = bm.getButtons();
+			for (Button b : buttons) {
+				if (b.pointContained(mouseX, mouseY)) {
+					bm.setSelected(b);
+					return;  // Get out in case of border
+				}
+			}
+		}
 	}
 
 	public void render() {
@@ -578,6 +616,9 @@ class Parser {
 		return derTisch;
 
 	}
+}
+public void mouseClicked() {
+	k.clicked();
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "sizer" };

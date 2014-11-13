@@ -34,6 +34,15 @@ class Rect {
 			s.w + ", " + s.h + ")";
 	}
 
+	public boolean pointContained(float x, float y) {
+		if (x >= o.x && x <= (o.x + s.w)) {
+			if (y >= o.y && y <= (o.y + s.h)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	// Mostly used for debugging and silliness
 	public final color PURPLE = color(128, 0, 128);

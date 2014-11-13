@@ -8,22 +8,19 @@ class Button extends Rect {
 	}
 
 
-	// Inverts colors if mousing over
-	public void render() {
+	// Inverts colors if a button is selected
+	public void render(boolean selected) {
 		line(o.x, o.y, o.x + s.w, o.y);
 		line(o.x, o.y, o.x, o.y + s.h);
 		line(o.x, o.y + s.h, o.x + s.w, o.y + s.h);
 		line(o.x + s.w, o.y, o.x + s.w, o.y + s.h);
-
-		if (mouseX <= (o.x + s.w) && mouseX >= o.x) {
-			if (mouseY <= (o.y + s.h) && mouseY >= o.y) {
-				fill(BLACK);
-				rect(o.x, o.y, s.w, s.h);
-				fill(WHITE);
-				text(label, o.x + s.w / 2, o.y + s.h / 2);
-				return;
-			}
-		}
+		if (selected) {
+			fill(BLACK);
+			rect(o.x, o.y, s.w, s.h);
+			fill(WHITE);
+			text(label, o.x + s.w / 2, o.y + s.h / 2);
+			return;
+		}	
 
 		textAlign(CENTER, CENTER);
 		textSize(FONT_SIZE);

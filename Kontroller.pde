@@ -57,6 +57,20 @@ class Kontroller {
 		line(mapDims.o.x + mapDims.s.w, mapDims.o.y, mapDims.o.x + mapDims.s.w, mapDims.o.y + mapDims.s.h);
 	}
 
+	// Highlights the button clicked on, checks to make sure clicked is
+	// in the button managers jurisdiction
+	public void clicked() {
+	 if (buttonsDims.pointContained(mouseX, mouseY)) {
+			ArrayList<Button> buttons = bm.getButtons();
+			for (Button b : buttons) {
+				if (b.pointContained(mouseX, mouseY)) {
+					bm.setSelected(b);
+					return;  // Get out in case of border
+				}
+			}
+		}
+	}
+
 	public void render() {
 		drawSeparators();
 		eg.render();
