@@ -28,7 +28,7 @@ public void setup() {
 	size(1400, 800);
 
 	// Create parser
-	Parser p = new Parser("combined.csv", "StateMatrix.csv");
+	Parser p = new Parser("combined_2.csv", "StateMatrix.csv");
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 
@@ -156,35 +156,32 @@ public final String AREA = "Area";
 public final String OBESITY_PCT = "Obesity";
 public final String POPULATION = "Population";
 public final String TEMP = "Temp";
-public final String DEFAULT_VAL = GDP;
+public final String GSP_P_CAP = "GSP_Cap";
+public final String DEFAULT_VAL = AREA;
 public final int BLACK = color(0, 0, 0);
 public final int WHITE = color(255, 255, 255);
 
 
 class Element {
 	public final String id;
-	public final float gdp;
 	public final float area;
 	public final float obesityPct;
 	public final float population;
 	public final float temp;
+	public final float gspPC;
 
 
-	public Element(String id, float gdp, float area, float obesityPct,
-		float population, float temp) {
+	public Element(String id, float area, float obesityPct,
+		float population, float temp, float gspPC) {
 		this.id = id;
-		this.gdp = gdp;
 		this.area = area;
 		this.obesityPct = obesityPct;
 		this.population = population;
 		this.temp = temp;
+		this.gspPC = gspPC;
 	}
 
 	public float getData(String dataMode) {
-		if (dataMode.equals(GDP)) {
-			return gdp;
-		}
-
 		if (dataMode.equals(AREA)) {
 			return area;
 		}
@@ -200,6 +197,12 @@ class Element {
 		if (dataMode.equals(TEMP)) {
 			return temp;
 		}
+
+		if (dataMode.equals(GSP_P_CAP)) {
+			return gspPC;
+		}
+
+		println("ERROR: Problem getting data out of Element");
 
 		return Float.NaN;
 	}
@@ -379,13 +382,6 @@ class ElementView {
 
 	}
 
-	// public void tPrint() {
-	// 	println("id = " + element.id);
-	// 	println("data = " + element.data);
-	// 	println("Index = (" + index.x + ", " + index.y + ")");
-	// 	println();
-	// }
-
 }
 class Point {
 	public final float x;
@@ -458,7 +454,7 @@ class Kontroller {
 	private Rect titleDims;
 	private Rect buttonsDims;
 
-	public final String[] VALID_DATA_MODES = {AREA, GDP, OBESITY_PCT, POPULATION, TEMP};
+	public final String[] VALID_DATA_MODES = {AREA, OBESITY_PCT, POPULATION, TEMP, GSP_P_CAP};
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
@@ -567,11 +563,11 @@ class Parser {
 
 	// Data File Columns
 	public final int ID_COL = 0;
-	public final int GDP_COL = 1;
-	public final int AREA_COL = 2;
-	public final int OBESE_COL = 3;
-	public final int POP_COL = 4;
-	public final int TEMP_COL = 5;
+	public final int AREA_COL = 1;
+	public final int OBESE_COL = 2;
+	public final int POP_COL = 3;
+	public final int TEMP_COL = 4;
+	public final int GSP_P_CAP_COL = 5;
 
 	// Map File Columns
 	public final int STATE_COL = 0;
@@ -595,9 +591,9 @@ class Parser {
 
 			String[] listL = split(l, ',');
 
-			dieListe.add(new Element(listL[ID_COL], Float.parseFloat(listL[GDP_COL]),
-				Float.parseFloat(listL[AREA_COL]), Float.parseFloat(listL[OBESE_COL]),
-				Float.parseFloat(listL[POP_COL]), Float.parseFloat(listL[TEMP_COL])));
+			dieListe.add(new Element(listL[ID_COL], Float.parseFloat(listL[AREA_COL]),
+				Float.parseFloat(listL[OBESE_COL]), Float.parseFloat(listL[POP_COL]),
+				Float.parseFloat(listL[TEMP_COL]), Float.parseFloat(listL[GSP_P_CAP_COL])));
 
 		}
 

@@ -59,11 +59,4 @@ class ElementView {
 
 	}
 
-	// public void tPrint() {
-	// 	println("id = " + element.id);
-	// 	println("data = " + element.data);
-	// 	println("Index = (" + index.x + ", " + index.y + ")");
-	// 	println();
-	// }
-
 }

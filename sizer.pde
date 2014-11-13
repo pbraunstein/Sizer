@@ -9,7 +9,7 @@ void setup() {
 	size(1400, 800);
 
 	// Create parser
-	Parser p = new Parser("combined.csv", "StateMatrix.csv");
+	Parser p = new Parser("combined_2.csv", "StateMatrix.csv");
 	ArrayList<Element>els = p.readInData();
 	HashMap<String, Point> h = p.readInMap();
 

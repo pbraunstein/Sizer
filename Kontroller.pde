@@ -11,7 +11,7 @@ class Kontroller {
 	private Rect titleDims;
 	private Rect buttonsDims;
 
-	public final String[] VALID_DATA_MODES = {AREA, GDP, OBESITY_PCT, POPULATION, TEMP};
+	public final String[] VALID_DATA_MODES = {AREA, OBESITY_PCT, POPULATION, TEMP, GSP_P_CAP};
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
