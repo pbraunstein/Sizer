@@ -1,6 +1,5 @@
-Fix map so it doesn't expand past it's container
 Implement resizing
 Implement animated transitions
 Add equal size component to the map
 Perhaps make Element hold an array list of datums accessable by
-the index from the VALID_DATA_MODES array
+the index from the VALID_DATA_MODES array?

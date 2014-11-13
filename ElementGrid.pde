@@ -1,13 +1,16 @@
 class ElementGrid{
 	public ArrayList<ElementView> elementViews;
 	public Rect bounds;
+
 	private Point dimensions;
 	private float elemWidthPct;
 	private float elemHeightPct;
 	private String dataMode = DEFAULT_VAL;
+	private float biggestRad = 64.0;
 
 	public final float PADDING_PCT = 0.02;
-	public final float BIGGEST_RAD = 64.0;
+	public final float BIG_SCALE_FACTOR = 23;
+
 
 	public ElementGrid(ArrayList<Element> elements, HashMap<String, Point>
 		stateMap, Point dimensions, Rect bounds) {
@@ -22,12 +25,15 @@ class ElementGrid{
 	}
 
 	// Scales radii so bubbles fit on the screen
+	// This is pretty hacky
 	private void scaleRadii() {
 		float maxRad = getMaxInitRad();
 
+		// biggestRad = bounds.s.w / BIG_SCALE_FACTOR;
+
 		for (ElementView e : elementViews) {
 			float currentRad = e.getRadius();
-			e.setRadius((BIGGEST_RAD * currentRad) / maxRad);
+			e.setRadius((biggestRad * currentRad) / maxRad);
 		}
 
 	}

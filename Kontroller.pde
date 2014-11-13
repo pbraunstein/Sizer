@@ -26,7 +26,7 @@ class Kontroller {
 
 		// Instantiate children
 		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
-		l = new Label(titleDims, "Fuck Off!");
+		l = new Label(titleDims, "'Murica!");
 		bm = new ButtonManager(VALID_DATA_MODES, buttonsDims);
 
 		setDataMode(AREA);
