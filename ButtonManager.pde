@@ -2,8 +2,8 @@ class ButtonManager {
 	private ArrayList<Button> buttons;
 	private Rect bounds;
 
-	public final float PCT_X_PADDING = 0.01;
-	public final float PCT_Y_PADDING = 0.01;
+	public final float PCT_X_PADDING = 0;
+	public final float PCT_Y_PADDING = 0;
 
 
 	public ButtonManager(String[] buttonsToMake, Rect bounds) {
@@ -17,7 +17,7 @@ class ButtonManager {
 		Size buttonSize = getButtonSize(buttonsToMake.length);
 
 		float xCoord = bounds.o.x + bounds.o.x * PCT_X_PADDING;
-		float yCoord = bounds.o.y + bounds.o.y * PCT_Y_PADDING;
+		float yCoord = bounds.o.y;
 
 		for (String s : buttonsToMake) {
 			buttons.add(new Button(new Point(xCoord, yCoord),
@@ -29,7 +29,7 @@ class ButtonManager {
 
 	private Size getButtonSize(int numButtons) {
 		float w = bounds.s.w - (bounds.s.w * PCT_X_PADDING);
-		float h = bounds.s.h / numButtons;
+		float h = (bounds.s.h / numButtons) - (bounds.s.h / numButtons) * PCT_Y_PADDING;
 
 		return new Size(w, h);
 	}

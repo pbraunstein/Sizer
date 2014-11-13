@@ -50,15 +50,30 @@ class Button extends Rect {
 		this.label = label;
 	}
 
+
+	// Inverts colors if mousing over
 	public void render() {
 		line(o.x, o.y, o.x + s.w, o.y);
 		line(o.x, o.y, o.x, o.y + s.h);
 		line(o.x, o.y + s.h, o.x + s.w, o.y + s.h);
 		line(o.x + s.w, o.y, o.x + s.w, o.y + s.h);
+
+		if (mouseX <= (o.x + s.w) && mouseX >= o.x) {
+			if (mouseY <= (o.y + s.h) && mouseY >= o.y) {
+				fill(BLACK);
+				rect(o.x, o.y, s.w, s.h);
+				fill(WHITE);
+				text(label, o.x + s.w / 2, o.y + s.h / 2);
+				return;
+			}
+		}
+
 		textAlign(CENTER, CENTER);
 		textSize(FONT_SIZE);
 		fill(BLACK);
 		text(label, o.x + s.w / 2, o.y + s.h / 2);
+		
+		fill(BLACK);
 	}
 
 	public String getLabel() {
@@ -84,8 +99,8 @@ class ButtonManager {
 	private ArrayList<Button> buttons;
 	private Rect bounds;
 
-	public final float PCT_X_PADDING = 0.1f;
-	public final float PCT_Y_PADDING = 0.01f;
+	public final float PCT_X_PADDING = 0;
+	public final float PCT_Y_PADDING = 0;
 
 
 	public ButtonManager(String[] buttonsToMake, Rect bounds) {
@@ -99,7 +114,7 @@ class ButtonManager {
 		Size buttonSize = getButtonSize(buttonsToMake.length);
 
 		float xCoord = bounds.o.x + bounds.o.x * PCT_X_PADDING;
-		float yCoord = bounds.o.y + bounds.o.y * PCT_Y_PADDING;
+		float yCoord = bounds.o.y;
 
 		for (String s : buttonsToMake) {
 			buttons.add(new Button(new Point(xCoord, yCoord),
@@ -111,7 +126,7 @@ class ButtonManager {
 
 	private Size getButtonSize(int numButtons) {
 		float w = bounds.s.w - (bounds.s.w * PCT_X_PADDING);
-		float h = bounds.s.h / numButtons;
+		float h = (bounds.s.h / numButtons) - (bounds.s.h / numButtons) * PCT_Y_PADDING;
 
 		return new Size(w, h);
 	}
@@ -129,6 +144,7 @@ public final String POPULATION = "Population";
 public final String TEMP = "Temp";
 public final String DEFAULT_VAL = GDP;
 public final int BLACK = color(0, 0, 0);
+public final int WHITE = color(255, 255, 255);
 
 
 class Element {
