@@ -11,7 +11,7 @@ class Kontroller {
 	private Rect titleDims;
 	private Rect buttonsDims;
 
-	public final String[] VALID_DATA_MODES = {AREA, OBESITY_PCT, POPULATION, TEMP, GSP_P_CAP};
+	public final String[] VALID_DATA_MODES = {EQUAL, AREA, OBESITY_PCT, POPULATION, TEMP, GSP_P_CAP};
 
 	public Kontroller(ArrayList<Element> elements, HashMap<String, Point> stateMap,
 		Point dimensions, Rect bounds) {
@@ -28,8 +28,6 @@ class Kontroller {
 		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
 		l = new Label(titleDims, "'Murica!");
 		bm = new ButtonManager(VALID_DATA_MODES, buttonsDims);
-
-		setDataMode(AREA);
 	}
 
 	public ElementGrid getElementGrid() {

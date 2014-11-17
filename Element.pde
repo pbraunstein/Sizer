@@ -38,6 +38,10 @@ class Element {
 			return gspPC;
 		}
 
+		if (dataMode.equals(EQUAL)) {
+			return 1;
+		}
+
 		println("ERROR: Problem getting data out of Element");
 
 		return Float.NaN;

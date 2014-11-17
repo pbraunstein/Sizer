@@ -9,7 +9,8 @@ class ElementGrid{
 	private float biggestRad = 64.0;
 
 	public final float PADDING_PCT = 0.02;
-	public final float BIG_SCALE_FACTOR = 23;
+	public final float BIG_SCALE_FACTOR = 1.16;
+	public final float MAX_NUM_ACROSS = 14;  // Width of state matrix
 
 
 	public ElementGrid(ArrayList<Element> elements, HashMap<String, Point>
@@ -27,13 +28,19 @@ class ElementGrid{
 	// Scales radii so bubbles fit on the screen
 	// This is pretty hacky
 	private void scaleRadii() {
-		float maxRad = getMaxInitRad();
+		// If it is equal, then don't care what the data is.
+		if (dataMode.equals(EQUAL)) {
+			float allRad = bounds.s.w / (2 * MAX_NUM_ACROSS);
+			for (ElementView e : elementViews) {
+				e.setRadius(allRad);
+			}
 
-		// biggestRad = bounds.s.w / BIG_SCALE_FACTOR;
-
-		for (ElementView e : elementViews) {
-			float currentRad = e.getRadius();
-			e.setRadius((biggestRad * currentRad) / maxRad);
+		} else {  // Otherwise, actually look at the data and scale them
+			float maxRad = getMaxInitRad();
+			for (ElementView e : elementViews) {
+				float currentRad = e.getRadius();
+				e.setRadius((biggestRad * currentRad) / (maxRad * BIG_SCALE_FACTOR));
+			}
 		}
 
 	}
