@@ -26,7 +26,7 @@ class Kontroller {
 
 		// Instantiate children
 		eg = new ElementGrid(elements, stateMap, dimensions, mapDims);
-		l = new Label(titleDims, "'Murica!");
+		l = new Label(titleDims, "United States of Circles");
 		bm = new ButtonManager(VALID_DATA_MODES, buttonsDims);
 	}
 
